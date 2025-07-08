@@ -109,7 +109,10 @@ async def github_login():
         raise HTTPException(status_code=500, detail="GitHub OAuth not configured")
     
     # Use the backend callback URL that matches GitHub OAuth app settings
-    backend_url = "http://localhost:8000"
+    # Get the current host dynamically for Heroku deployment
+    import os
+    port = os.getenv("PORT", "8000")
+    backend_url = f"https://your-heroku-app-name.herokuapp.com"  # Replace with your actual Heroku app name
     redirect_url = f"https://github.com/login/oauth/authorize?client_id={GITHUB_CLIENT_ID}&scope=repo&redirect_uri={backend_url}/auth/github/callback"
     return {"auth_url": redirect_url}
 
