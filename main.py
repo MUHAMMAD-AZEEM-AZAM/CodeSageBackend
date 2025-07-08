@@ -113,7 +113,7 @@ async def github_login():
     import os
     port = os.getenv("PORT", "8000")
     backend_url = f"https://your-heroku-app-name.herokuapp.com"  # Replace with your actual Heroku app name
-    redirect_url = f"https://github.com/login/oauth/authorize?client_id={GITHUB_CLIENT_ID}&scope=repo&redirect_uri={backend_url}/auth/github/callback"
+    redirect_url = f"https://github.com/login/oauth/authorize?client_id={GITHUB_CLIENT_ID}&scope=repo&redirect_uri=https://code-saga-e83e7b294ca1.herokuapp.com/auth/github/callback"
     return {"auth_url": redirect_url}
 
 @app.get("/auth/github/callback")
