@@ -129,7 +129,8 @@ async def github_callback(code: str):
             data={
                 "client_id": GITHUB_CLIENT_ID,
                 "client_secret": GITHUB_CLIENT_SECRET,
-                "code": code
+                "code": code,
+                "redirect_uri": "https://code-saga-e83e7b294ca1.herokuapp.com/auth/github/callback"
             },
             headers={"Accept": "application/json"}
         )
@@ -164,6 +165,8 @@ async def github_callback(code: str):
         # Redirect to frontend with session data
         frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
         redirect_url = f"{frontend_url}/login?session_id={session_id}&user={user_data['login']}"
+        
+        print("Token response:", token_response.json())
         
         return RedirectResponse(url=redirect_url)
 
