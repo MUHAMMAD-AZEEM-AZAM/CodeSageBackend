@@ -13,7 +13,7 @@ from groq_api import review_pull_request as groq_review_pull_request
 
 load_dotenv()
 
-app = FastAPI(title="GitHub PR Review Agent", version="1.0.0")
+app = FastAPI(title="CodeSage Github code reviewer", version="1.0.0")
 
 # CORS middleware
 app.add_middleware(
@@ -109,11 +109,8 @@ async def github_login():
         raise HTTPException(status_code=500, detail="GitHub OAuth not configured")
     
     # Use the backend callback URL that matches GitHub OAuth app settings
-    # Get the current host dynamically for Heroku deployment
-    import os
-    port = os.getenv("PORT", "8000")
-    backend_url = f"https://your-heroku-app-name.herokuapp.com"  # Replace with your actual Heroku app name
-    redirect_url = f"https://github.com/login/oauth/authorize?client_id={GITHUB_CLIENT_ID}&scope=repo&redirect_uri=https://code-saga-e83e7b294ca1.herokuapp.com/auth/github/callback"
+    backend_url = "https://code-saga-e83e7b294ca1.herokuapp.com"
+    redirect_url = f"https://github.com/login/oauth/authorize?client_id={GITHUB_CLIENT_ID}&scope=repo&redirect_uri={backend_url}/auth/github/callback"
     return {"auth_url": redirect_url}
 
 @app.get("/auth/github/callback")
@@ -129,8 +126,7 @@ async def github_callback(code: str):
             data={
                 "client_id": GITHUB_CLIENT_ID,
                 "client_secret": GITHUB_CLIENT_SECRET,
-                "code": code,
-                "redirect_uri": "https://code-saga-e83e7b294ca1.herokuapp.com/auth/github/callback"
+                "code": code
             },
             headers={"Accept": "application/json"}
         )
@@ -163,10 +159,8 @@ async def github_callback(code: str):
         }
         
         # Redirect to frontend with session data
-        frontend_url = os.getenv("FRONTEND_URL", "https://your-frontend-url")
+        frontend_url = os.getenv("FRONTEND_URL", "https://code-sage-flame.vercel.app/")
         redirect_url = f"{frontend_url}/login?session_id={session_id}&user={user_data['login']}"
-        
-        print("Token response:", token_response.json())
         
         return RedirectResponse(url=redirect_url)
 
