@@ -163,7 +163,7 @@ async def github_callback(code: str):
         }
         
         # Redirect to frontend with session data
-        frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
+        frontend_url = os.getenv("FRONTEND_URL", "https://your-frontend-url")
         redirect_url = f"{frontend_url}/login?session_id={session_id}&user={user_data['login']}"
         
         print("Token response:", token_response.json())
